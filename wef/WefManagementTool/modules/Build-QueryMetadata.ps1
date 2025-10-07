@@ -21,8 +21,6 @@ MetadataSchema
     "tags": ["tag_1", "tag_2", "tag_3", ...]                            # Related terms to the query's intent
 }#>
 
-# [NOTE] Program with PowerShell 7.5.1 works
-
 class QueryAuthor {
     [ValidateNotNullOrEmpty()][string]$AuthorName
     [ValidateNotNullOrEmpty()][string]$AuthorAlias
@@ -100,23 +98,26 @@ function Build-MetadataQuery {
         [Parameter(Mandatory = $false)]
         [string]
         [Alias("Root")]
-        $RootDatabase = "$PSScriptRoot\..\QueriesDB"
+        $RootDatabase = $null
     )
+
+    if (-not $RootDatabase) { 
+        $RootDatabase = Join-Path -Path ((Join-Path -Path $PSScriptRoot -ChildPath '..') | Resolve-Path) -ChildPath 'QueriesDB'
+    }
 
     $XmlQueryFiles = Get-ChildItem -Path $RootDatabase -Recurse -Filter "*.query.xml" -File
 
     foreach ($XmlQueryFile in $XmlQueryFiles) {
 
-        $Metadata = [PSCustomObject]@{
-            QueryName   = $null
-            QueryIntent = $null
-            EventList   = @()
-            Providers   = @()
-            Channels    = @()
-            Authors     = @()
-            Attack      = @()
-            Tags        = @()
-        }
+        # Strongly typed variables
+        [string]$QueryName = $null
+        [QueryIntent]$QueryIntent = $null
+        [List[int]]$EventList = [List[int]]::new()
+        [List[string]]$Providers = [List[string]]::new()
+        [List[string]]$Channels = [List[string]]::new()
+        [List[QueryAuthor]]$Authors = [List[QueryAuthor]]::new()
+        [List[string]]$Attack = [List[string]]::new()
+        [List[string]]$Tags = [List[string]]::new()
 
         $RawXmlFile = Get-Content -Path $XmlQueryFile.FullName
         [xml]$xml = "<?xml version=`"1.0`" encoding=`"utf-8`"?>`n$RawXmlFile"
@@ -159,7 +160,7 @@ function Build-MetadataQuery {
             }
         }
 
-        # Write QueryMetadata Object
+        # Build the final strongly-typed QueryMetadata object
         $QueryMetadata = [QueryMetadata]::new(
             $QueryName, 
             $QueryIntent, 
@@ -171,7 +172,7 @@ function Build-MetadataQuery {
             $Tags
         )
 
-        # Write JSON file
+        # Write to JSON file
         $OutputJsonPath = $XmlQueryFile.FullName -replace ("query.xml", "meta.json")
         Write-QueryMetadataFile -QueryMetadata $QueryMetadata -OutputFile $OutputJsonPath
     }
@@ -311,7 +312,6 @@ function Write-QueryMetadataFile {
 
     ConvertTo-Json -InputObject $QueryMetadata -Compress | Out-File $OutputFile
 }
-
 
 # Run Main
 Build-MetadataQuery
