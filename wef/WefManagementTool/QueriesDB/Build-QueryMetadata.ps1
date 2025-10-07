@@ -106,16 +106,17 @@ function Build-MetadataQuery {
     $XmlQueryFiles = Get-ChildItem -Path $RootDatabase -Recurse -Filter "*.query.xml" -File
 
     foreach ($XmlQueryFile in $XmlQueryFiles) {
-    
-        # Strongly typed variables
-        [string]$QueryName = $null
-        [QueryIntent]$QueryIntent = $null
-        [List[int]]$EventList = [List[int]]::new()
-        [List[string]]$Providers = [List[string]]::new()
-        [List[string]]$Channels = [List[string]]::new()
-        [List[QueryAuthor]]$Authors = [List[QueryAuthor]]::new()
-        [List[string]]$Attack = [List[string]]::new()
-        [List[string]]$Tags = [List[string]]::new()
+
+        $Metadata = [PSCustomObject]@{
+            QueryName   = $null
+            QueryIntent = $null
+            EventList   = @()
+            Providers   = @()
+            Channels    = @()
+            Authors     = @()
+            Attack      = @()
+            Tags        = @()
+        }
 
         $RawXmlFile = Get-Content -Path $XmlQueryFile.FullName
         [xml]$xml = "<?xml version=`"1.0`" encoding=`"utf-8`"?>`n$RawXmlFile"
@@ -311,19 +312,6 @@ function Write-QueryMetadataFile {
     ConvertTo-Json -InputObject $QueryMetadata -Compress | Out-File $OutputFile
 }
 
-function Write-QueryMetadataFile {
-    param (
-        [Parameter(Mandatory = $true)]
-        [QueryMetadata]
-        $QueryMetadata,
-
-        [Parameter(Mandatory = $true)]
-        [string]
-        $OutputFile
-    )
-
-    ConvertTo-Json -InputObject $QueryMetadata -Compress | Out-File $OutputFile
-}
 
 # Run Main
 Build-MetadataQuery
