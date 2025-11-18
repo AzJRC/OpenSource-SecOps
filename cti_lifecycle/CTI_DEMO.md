@@ -113,16 +113,21 @@ PIRs are, according to Josh Darby, in the FIRST CTI MEETING 2024
 
 > _prioritized set of topics that your stakeholders need intelligence on in order to make better decisions_
 
-According to Darby, we SHOULD go through every relevant stakeholder in the organization that will use or receive the intelligence, and ask them what kind of intel they need, their concerns, and their needs. 
+Moreoever, Darby suggests that we SHOULD go through every relevant stakeholder in the organization that will use or receive the intelligence, and ask them what kind of intel they need, their concerns, and their needs. 
 
 This interviewing process is very fruitful because stakeholder can provide experience-based information that minimizes the possibility of missing details or plugging gaps in the investigation.
 
-> [!TIP]
-> In a real engagement it is recommended to track the time invested in the interviewing process using tools such as Google Calendar. Also, you should use the concentric-circle (must, should, could) approach to identify the most important stakeholders you should interact with first, in order to minimize time and costs.
+Yet, it is important to understand how these frameworks are used in real world CTI engagements. For instance, Red Hat's approch for PIR development is both internal and external focused, requiring constant interaction with stakeholders to identify what they call the ELEMENTS, FUNCTIONS, and ASSETS of the organization (internal) and potential ADVERSARY OPERATIONS (external). As a result, the PIRs generated with this framework are organization-specific useful for strategic and operational stakeholders.
+
+In contrast, Intel 471's approach to Intelligence Requirements uses an external; threat-centric approach, specifically tailored to Cyber Underground (CU) intelligence (i.e., ilicit forums, marketplaces, etc). Moreoever, this approach follows an strictly standardized process, that differentiates greatly with Red Hat's more flexible process.
+
+Regardless these differences, we can make use of both approaches and suggestions to deliver better CTI results. Red Hat's approach is useful to define our first version of IRs and PIRs, while Intel 471's approach can be useful to further refine those PIRs into threat-centric PIRs and SIRs.
 
 ![Cyber Intelligence Tradecraft Report - CMU - Intelligence Requirements Inverted Pyramid](/media/cti_lifecycle-cti_demo-01-intelligence_requirements.png)
 
-#### Step 1: Identify ELEMENTS of the organization
+In summary, the combined approaches makes PIRs both business-relevant and threat-realistic
+
+#### Step 1: Identify ELEMENTS, FUNCTIONS, and ASSETS of the organization
 
 Before mocking up any PIR, [RedHat PIR Framework v1.1](https://github.com/redhat-infosec/priority-intelligence-requirements-dev/tree/main) recommends identifying the **ELEMENTS** of the organization, derive the **FUNCTION**, and then map to its supporting **ASSETS**.
 
@@ -139,9 +144,7 @@ Finally, the **ASSETS** are the actual, tangible or non-tangible component in th
 > [!INFO]
 > Using the AI generated case, an identity-related **ELEMENT** could be _"real-time payment orchestration and embedded finance for e-commerce and marketplaces"_. The **FUNCTION** could be _"high-availability services"_. Finally, the supporting **ASSET** could be _"Application Programming Interfaces"_.
 
-Even though Red Hat approch is mostly used for internal CTI engagements, it can still be an effective framework when working with stakeholders, who know the details of the organization.
-
-Leveraging the inverviewing process, we can ask question to identify the ELEMENTS of the organization, such as:
+If we were to try identify the ELEMENTS of the organization, the Red Hat methodology suggest asking the following questions:
 
 - What features define your organization?
 - What makes your organization unique?
@@ -157,15 +160,83 @@ Leveraging the inverviewing process, we can ask question to identify the ELEMENT
 > [!TIP]
 > Use [Red Hat's PIR Process v1.1 Template](https://docs.google.com/spreadsheets/d/1lnZOGX6Shm4NoT06APeRPXe4jEX0dCWDXTrmm60aOa8/edit?usp=sharing) to document the ELEMENTS
 
-_Using the information provided by the stakeholder, what could be the ELEMENTS of the organization? My answer is below this line_
+_Using the information provided by the stakeholder, what could be the ELEMENTS, FUNCTIONS and supporting ASSETS of the organization?_
 
 > [!WARNING]
 > Don't get spoiler, my answer is below this line. Try it yourself first, then compare.
 
-| Element | Function | Asset |
+| Element | Question | Rationale |
+|:---:|---|:---:|
+| Real-time payment orchestration and embedded finance for e-commerce and marketplaces | Why customers buy you? | NeuraPay’s core identity is being a real-time payment orchestration layer between online merchants, banks, card schemes, and alternative payment methods for mid to large e-commerce and platform companies. |
+| Brand promise of “always-on payments” and six-nines availability | What's your competitive advantage? | “Always-on payments” is literally the brand promise and what makes them more competitive than other providers |
+| Cloud-native, Google Cloud–centric technology platform | What are your core characteristics? | NeuraPay describes itself as very cloud heavy, with a microservices transaction engine on Kubernetes, public API gateway, and merchant portal (web + iOS/Android) on Google Cloud. |
+| Regulated FinTech operating in EU/UK with strategic LATAM expansion | What's your current business strategy? | The regulated status and the international expansion strategy define a big part of who is the organization |
+
+The next steps is to identify the FUNCTIONS and the supporting ASSETS for each one of the ELEMENTS identified earlier. The process is simple:
+
+1. First interpret the ELEMENT you just found
+2. Translate the ELEMENT into a FUNCTION
+3. Identify the ASSETS that enable that FUNCTION
+
+Each step MUST narrow your focus. From an abastract idea (the ELEMENT) to a security-meaningul idea (the FUNCTION), to finally an actual tangible thing that MUST be protected (ASSETS)
+
+A FUNCTION has to be a security-critical outcome tied to an element. Not technology. Ask yourself: _“What needs to be protected to preserve this element? What cannot fail?”_ 
+
+> [!WARNING]
+> Don't get spoiler, my answer is below this line. Try it yourself first, then compare.
+
+| Element | Interpretation | FUNCTION |
+|:---:|:---:|:---:|
+| Real-time payment orchestration | They exist to move money between merchants and payment networks instantly. | Secure, accurate, uninterrupted processing of payment transactions |
+| “Always-on payments” | Uptime and reliability are non-negotiable — core to what customers pay for. | Maintain extremely high availability and stability that could break the “always-on payments” promise |
+| Cloud-native GCP platform | Their operational model depends on cloud services and automation. | Securely operate and evolve the cloud-native platform so that workloads and data remain confidential, intact, and available while supporting rapid development. |
+| Regulated FinTech expanding to LATAM | Compliance, data flows, trust, and emerging-market risk are central. | Enable compliant transaction of data while avoiding regulatory and security incidents during expansion |
+
+Once you have the function, you identify the ASSET by asking yourself: _“What people, systems, data, or external capabilities make this function possible?”_
+
+> [!TIP]
+> To keep things organized, you can categorize ASSETS in 5 buckets: Systems and Technology, Data, People, Interanal Processs, and External Dependencies.
+
+_Using the information provided by the stakeholder, can you identify and categorize some of the ASSETS mentioned?_
+
+> [!WARNING]
+> Don't get spoiler, my answer is below this line. Try it yourself first, then compare.
+
+| Category                  | Assets identified                      |
+| ------------------------- | -------------------------------------- |
+| **Systems / Technology**  | Kubernetes, API gateway, CI/CD         |
+| **Data**                  | Transaction data, fraud scoring models |
+| **People / Roles**        | Developers, cloud security engineers   |
+| **Internal Processes**    | Logging and Monitoring                 |
+| **External Dependencies** | Fraud vendors, regulated partners      |
+
+With this information, we can tie everything together:
+
+| Element | FUNCTION | ASSETS |
 |---|---|---|
-| Real-time payment orchestration and embedded finance for e-commerce and marketplaces | Availability of payment orchestration workflow to mantain business operations | Internal Cloud Resources - Transaction Pipelines |
-| Brand promise is “always-on payments” and we advertise six nines of availability to our biggest merchants. | Prestige of the brand to mantain customer trust through uninterrupted services | Internal Process - Monitoring and observability |
-| Use of third parties for fraud detection, KYC, and AML | Integrity and security of third party platforms to minimize breaches | Third Party Platforms - Fraud Detection |
-| Regulated business under EU and UK, with new ongoing LATAM expansion | Regulatory compliance and data handling | Requirements - Regulatory Compliance |
+| Real-time payment orchestration and embedded finance for e-commerce and marketplaces | Secure, accurate, uninterrupted processing of payment transactions | - Systems and Technology: API Gateway - Data: Transaction Data - External Dependencies: Third-party fraud/KYC/AML integrations |
+| Brand promise of “always-on payments” and six-nines availability | Maintain extremely high availability and stability that could break the “always-on payments” promise | - Internal Process: Logging and Monitoring - Systems and Technology: Kubernetes |
+| Cloud-native, Google Cloud–centric technology platform | Securely operate and evolve the cloud-native platform so that workloads and data remain confidential, intact, and available while supporting rapid development. | - Systems and Technology: Cloud resources - People: Cloud Security Engineers |
+| Regulated FinTech operating in EU/UK with strategic LATAM expansion | Enable compliant transaction of data while avoiding regulatory and security incidents during expansion | - External Dependencies: Contracts and compliance requirements in EU, UK, and MX - External Dependencies: KYC and AML providers - Systems and Technology: Managed DBs holding customer data |
+
+#### Step 2: Map ELEMENTS to plausible ADVERSARY OPERATIONS
+
+The next step is to identify the most plausible adversarial threats to each ELEMENT of the organization. Red Hat's approach is simple:
+
+1. For each ASSET that supports an ELEMENT's function (the technical or operational component that ensures the ELEMENT continues living), identify the most impactful ADVERSARY OPERATION.
+2. Assess each ADVERSARY OPERATION against the likelihood of occurence and the impact (this is essentially a Risk Assesment process)
+
+Now, a question rises. How do I know which ADVERSARY OPERATION is the most impactful one over other possibilities?
+
+The way to proceed is to ask yourself (or the stakeholders if they know), _how the asset can fail so that the ELEMENTS function is affected?_ By knowing that piece of information we can attempt mapping potential adversary behaviors that are most **capable** of causing that failure.
+
+> [!INFO]
+> Notice that the keyword here is **capability**. We define threats as external adversarial entities who have malicious **intent**, **cabapibility** and the **opportunity** to cause harm.
+
+Here is the logic summarized:
+
+1. An ELEMENT is tied to a FUNCTION that describes _what needs to be secured_ to keep the ELEMENT alive
+2. An ELEMENT depends on one or more ASSET that supports the FUNCTION
+3. ASSETS can fail in one or more ways, affecting an ELEMENT's FUNCTION
+4. ADVERSARY OPERATION(s) can force failures in ASSETS
 
