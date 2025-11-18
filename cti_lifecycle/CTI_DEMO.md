@@ -4,14 +4,14 @@ In this file I am documenting a first attempts to **formally** engage with the C
 
 ## Creating the case study with ChatGPT
 
-For this demonstration, I use ChatGPT 5.1 Thinking model to walk me through a case study, using the following prompt:
+For this demonstration, I am using ChatGPT 5.1 Thinking model to walk me through a case study, using the following prompt:
 
 ```
 You are participating in a structured Cyber Threat Intelligence (CTI) simulation.
 
 ROLE DEFINITIONS:
 - **Me:** Cyber Threat Intelligence (CTI) practitioner.
-- **You:** A key fictional stakeholder with both **strategic and operational authority** within a fictional organization.
+- **You:** Sometimes, a key fictional stakeholder with both **strategic and operational authority** within a fictional organization. Other times, my senior CTI partner, who will be helping me out during the engagement.
 
 SCENARIO:
 We will execute a full CTI engagement following the **CTI Lifecycle**, beginning with the **Planning and Direction** phase and progressing through all subsequent phases.
@@ -32,11 +32,11 @@ This simulation aims to practice the applied implementation of key CTI methodolo
    - Identify, evaluate, and rank the most relevant TTPs likely to be used by prioritized threat actors against the organization.
 
 INTERACTION GUIDELINES:
-- You will introduce the fictional organization using a seed description that I will provide.  
-- You must behave as a realistic stakeholder, enabling the simulation to feel authentic and dynamic.
-- A back-and-forth interaction will take place. I may request additional details required to support intelligence development.
-- You may choose what information to reveal based on what would reasonably be known, confidential, or unavailable within a real business scenario.
-- I will share analytical updates, findings, and reasoning throughout the lifecycle.
+- As the stakeholder of the organization, you will introduce the fictional organization using a seed description that I will provide. 
+- As my senior CTI partner, you will tell answer my CTI-specific questions and support my efforts in other to provide a better final result.
+- As the stakeholder of the organization, you must behave as a real partner of the organization, enabling the simulation to feel authentic, dynamic and human.
+- As the stakeholder of the organization, a back-and-forth interaction will take place. I may request additional details required to support intelligence development. You may choose what information to reveal based on what would reasonably be known, confidential, or unavailable within a real business scenario.
+- As the CTI practitioner, I will share with you analytical updates, findings, and reasoning throughout the lifecycle.
 - You will answer as a human and not as a computer or AI agent. I.e., you wont answer using bullet points or formatted data, but with verbal-like sentences and paragraphs.
 
 FINAL OUTPUT:
@@ -56,8 +56,14 @@ seed {
    > Stakeholder: I can't protect everything. I have a limited budget and a small team. I need you to tell me what to worry about. Don't give me a 50-page report on 'all the threats.' Give me something actionable. I need to know who is actually going to come after us during this LATAM push, how they'll do it, and what we need to do to stop them. That's the 'subject' of this. Make sense?"
 }
 
+CONSIDERATIONS:
+- Use the intent of my prompts to identify which persona (Stakeholder or senior CTI specialist) must reply.
+- The stakeholder has the role of the CISO in the organization
+- Create a moderate simulation in terms of difficulty and complexity. It must neither be overly straightforward, nor overly complex.
+- When using accronyms, always include the concept in parenthesis after the accronym.
+
 CONFIRMATION:
-Once you are ready, think how to elaborate further the context of your organization using the provided _seed, then acknowledge your role as the stakeholder so we may begin.
+Once you are ready, think how to elaborate further the context of your organization using the provided _seed_, then acknowledge your roles as the stakeholder and senior CTI specialist so we may begin.
 ```
 
 > [!TIP]
@@ -68,17 +74,21 @@ Once you are ready, think how to elaborate further the context of your organizat
 Using the prompt presented earlier, the AI generated the following text, elaborating further the context of the organization. Read carefully and try to take notes of the most important aspects. 
 
 ```
-The company is a mid-size FinTech, about six years old. We started in Europe, and our core business is an API-driven payments and digital wallet platform for other companies. Our customers are mainly online marketplaces, neobanks, and subscription platforms that plug into our APIs to issue virtual cards, move money between users, do FX (foreign currency exchange) conversions, and handle payout flows. Up to now, most of our volume has been in the EU and a bit in the US, but the board has decided that our next big growth bet is LATAM. That expansion is already in motion, and I’m being measured on whether we keep the platform stable, trustworthy, and out of the headlines while we do it.
+We’re called NeuraPay, we are a mid-size FinTech headquartered in Madrid, with a strong presence in Spain and Portugal. Our core business is real-time payment orchestration and embedded finance for e-commerce and marketplaces. In practice, that means we sit between online merchants, banks, card schemes, and alternative payment methods, and we route transactions through the cheapest or most reliable rails in real time. Our customers are mid to large online retailers and platform companies; they integrate us via APIs (Application Programming Interfaces) into their checkout flows.
 
-On the tech side, we’re heavily cloud-native. We run on a single hyperscaler (I won’t name it for now, but think one of the big three), with most of our stack built around microservices, Kubernetes, and a very API-first mentality. Engineering moves fast; we use CI/CD everywhere, feature flags, all that modern DevOps culture. That’s great for speed, but it’s also how things like that exposed API key on GitHub happen. We already integrate with several LATAM banks and local payment rails via APIs and VPNs, and we’re starting to deal with more regional providers for KYC, fraud scoring, and SMS/notification services. So our attack surface in the region is not just “our” systems, but also all of these third parties and partners we depend on to make the product work in local markets.
+Technically we’re very cloud heavy. Our main stack runs on Google Cloud, with some legacy workloads still in a small private data center in Madrid that we have been trying to phase out. The transaction engine is a microservices architecture in Kubernetes, we have a public facing API gateway, and our merchant portal is a web app plus iOS and Android apps. Identity is based on OAuth 2.0 and OpenID Connect using a commercial identity provider. For data we have a mix of managed databases and a data lake that our data science team uses for risk scoring and fraud models. We use a handful of third parties for fraud detection, KYC (Know Your Customer), and AML (Anti-Money Laundering) screening, which means we are quite dependent on vendors and their own security posture.
 
-From a security and compliance standpoint, we’re not a disaster, but we’re not a bank either. We’re PCI-DSS compliant, we have a basic SOC function that operates mostly during business hours with some on-call coverage, and we do vulnerability scanning and occasional red teaming. However, our CTI capability is almost non-existent beyond “we read vendor reports and some feeds.” The security team is small relative to the pace of change: I have a handful of engineers focused on product security, a small SOC, and SREs who help with reliability and incident response. Budget is tight, and anything I do in one area means I’m not doing something else. That’s why I can’t afford a broad, theoretical view of “all threats”; I need focus.
+Right now, most of our regulated business is under the European Union and United Kingdom frameworks, but the next big bet is LATAM. We have signed letters of intent with partners in México and Brazil and are in late stage talks in Colombia and Chile. The plan is to start processing real transactions in México and Brazil in about six months, then bring Colombia and Chile online in the following six months. For regulatory, we are working with local partners and using a “regulated partner plus technology” model at first, which complicates data residency and cross-border flows. The board’s message to me is very simple: this expansion must not create a headline-worthy incident. They are particularly allergic to availability issues because our brand promise is “always-on payments” and we advertise six nines of availability to our biggest merchants.
 
-In terms of business stakes, for LATAM specifically, we’re pushing three main offerings: a white-label digital wallet for partners who want to launch quickly in Mexico and Brazil, cross-border payouts for gig and creator platforms, and a card-issuing API that lets companies issue physical and virtual cards in multiple currencies. The success metrics that my CEO and the board care about are transaction growth, uptime, and “zero major incidents” during the first eighteen months. We’ve promised 99.9999% availability to a couple of flagship partners in the region. If we fail on that or if we suffer a big breach that exposes customer PII or payment data, it will have a direct impact on churn, regulatory scrutiny, and our next funding round.
+In terms of security maturity, we are not starting from zero. We have a small but competent security team: I have one security architect, one cloud security engineer, two people in application security, two in detection and response, and one GRC (Governance, Risk and Compliance) person. We do not have a full-time CTI function, which is why I am so interested in this engagement with you. Our logging and monitoring is decent on the cloud side, a bit patchier around some legacy systems and smaller vendors. We have an EDR (Endpoint Detection and Response) solution on corporate endpoints, cloud workload protection, and a central SIEM (Security Information and Event Management), but tuning and threat-driven use cases are still a work in progress.
 
-Risk-wise, we’ve already had a few warning shots. That exposed API key I mentioned never led to a confirmed breach, but it was a wake-up call about our engineering hygiene. We’ve seen some low-level credential stuffing and bot traffic against our login flows, a few DDoS attempts that our provider mostly absorbed, and a growing amount of phishing using our brand in Spanish and Portuguese. Nothing catastrophic yet, but enough to tell me that we’re on the radar. As we enter LATAM, I’m specifically worried about financially motivated criminal groups who specialize in banking and payment fraud in the region, ransomware crews that might go after us or our critical partners, and any threat actor who would want to disrupt our platform as a way to blackmail us or damage our reputation.
+Last week a developer accidentally pushed a repository with an exposed API key to a public GitHub repo. That repo was public for about three hours before our internal tooling flagged it and we rotated the keys. We did not see any obvious abuse, but frankly we did not hunt very deeply, which worries me. Earlier this year we had a minor outage caused by a misconfiguration in our infrastructure-as-code that brought down a subset of our production pods for about twenty minutes. It was not an attack, but it reminded everyone how fragile things can be. We also had a near-miss with a third-party fraud provider who had a suspected compromise, and for a few very tense days we were worried that our transaction enrichment data might have been at risk. That one ended up being contained on their side, but it showed us how much we rely on vendors.
 
-So yes, your mandate makes sense to me. I don’t want a giant encyclopedic view of the threat landscape. I want you to tell me, for this LATAM push, who is realistically likely to target us, how they are most likely to do it given our technology and business model, and what we should prioritize so that with my limited budget and small team, I can reduce the risk of something blowing up.
+My main strategic concerns going into LATAM are these: we are entering markets where certain ransomware groups, initial access brokers, and financially motivated threat actors seem very active, especially against FinTechs and digital banks; we will be more visible to local regulators and probably to local criminal ecosystems; we are going to be onboarding new local partners quickly, which introduces supply-chain and integration risk; and we are going to push our engineering teams pretty hard, which usually increases mistakes and misconfigurations.
+
+Budget wise, I have some room, but it is not unlimited. I cannot boil the ocean. I cannot protect all assets to the same level. I need you to help me answer, in a very focused way, which threat actors I should lose sleep over for this LATAM expansion, which parts of our attack surface are most relevant in their playbooks, which tactics and techniques we should treat as “top tier” for preparation, and what concrete things I should prioritize, both defensively and in terms of monitoring and detection.
+
+NeuraPay is betting big on LATAM, we are under pressure from the board and investors, we are not blind, but we are not bulletproof either. I do not want a generic list of “threats to FinTech.” I want something that feels like it was written for NeuraPay doing this specific expansion, in this timeframe, with this architecture and these constraints.
 ```
 
 ## Cyber Threat Intelligence Simulation
@@ -90,40 +100,48 @@ In the following sections, we will go through the CTI lifecycle. Keep in mind th
 3. **bold text highlights important CTI concepts or keywords**
 4. > Quoted text is AI generated information
 5. > _Italics quoted text highlights comments made by others_
-6. `<!--Hidden text is used to ocult my answers. You can see them by inspecting the raw file-->`
 
 > [!IMPORTANT]
 > This file documents a simulation engagement. However, I will be updating this repository subproject directory with a real-life engagement experience, comparing both experiences to communicate the challenges faced and relevant insights.
 
 ### Task 1: Developing PIR leveraging well-known PIR development frameworks
+---
 
-In this section of the activity I will be guiding through the process of creating **Priority Intelligence Requirements** using well-known frameworks including [RedHat PIR Framework v1.1](https://github.com/redhat-infosec/priority-intelligence-requirements-dev/tree/main) and [Intel 471 CU-GIR Handbook Framework](https://hs-8813571.f.hubspotemail.net/hubfs/8813571/CU-GIRH%20v7.pdf).
+In this section of the activity I will be guiding through the process of creating **Priority Intelligence Requirements** using both [RedHat PIR Framework v1.1](https://github.com/redhat-infosec/priority-intelligence-requirements-dev/blob/main/README.md) and [Intel 471 CU-GIR Handbook Framework](https://hs-8813571.f.hubspotemail.net/hubfs/8813571/CU-GIRH%20v7.pdf) and [Intel 471 CU-GIR Handbook](https://github.com/intel471/CU-GIR/blob/main/README.md).
 
-PIRs are
+PIRs are, according to Josh Darby, in the FIRST CTI MEETING 2024
 
-> _prioritized set of topics that your stakeholders need intelligence on in order to make better decisions_ (Josh Darby MacLellan at FIRSTCTI24)
+> _prioritized set of topics that your stakeholders need intelligence on in order to make better decisions_
 
-Usually, we MUST go through every relevant stakeholder in the organization that will use or receive the intelligence, and ask them what kind of intel they need, their concerns, and needs. 
+According to Darby, we SHOULD go through every relevant stakeholder in the organization that will use or receive the intelligence, and ask them what kind of intel they need, their concerns, and their needs. 
 
 This interviewing process is very fruitful because stakeholder can provide experience-based information that minimizes the possibility of missing details or plugging gaps in the investigation.
 
 > [!TIP]
-> In a real engagement it is recommended to track the time invested in the interviewing process using tools such as Google Calendar. Also, you should use the concentric-circle (must, should, could) approach to identify the most important stakeholders you should interact with first.
+> In a real engagement it is recommended to track the time invested in the interviewing process using tools such as Google Calendar. Also, you should use the concentric-circle (must, should, could) approach to identify the most important stakeholders you should interact with first, in order to minimize time and costs.
 
-#### Step 1: Identifying core ELEMENTS of the organization using Red Hat's Approach
+![Cyber Intelligence Tradecraft Report - CMU - Intelligence Requirements Inverted Pyramid](/media/cti_lifecycle-cti_demo-01-intelligence_requirements.png)
 
-Before mocking up any PIR, we need to identify the ELEMENTS of the organization, defined in [RedHat PIR Framework v1.1](https://github.com/redhat-infosec/priority-intelligence-requirements-dev/tree/main).
+#### Step 1: Identify ELEMENTS of the organization
 
-The **ELEMENTS** are **keywords** that represents
+Before mocking up any PIR, [RedHat PIR Framework v1.1](https://github.com/redhat-infosec/priority-intelligence-requirements-dev/tree/main) recommends identifying the **ELEMENTS** of the organization, derive the **FUNCTION**, and then map to its supporting **ASSETS**.
+
+In short, the **ELEMENTS** are **keywords** that represents
 
 - The organization **identity**
 - The organization **strategy**
 - The organization **mission** and **vision**
 
-> [!INFO]
-> Even though Red Hat approch is mostly used for internal CTI engagements, it can still be an effective framework when working with stakeholders, who know the details of the organization.
+The **FUNCTION** of an element is a short phrase or keyword that provides context about what has to be secured about that ELEMENT to mantain it. To identify the function, ask yourself: _What must be true, security-wise, for this ELEMENT to continue existing?_
 
-Usually we find these keywords within internal documents or, in this scenario, by interviewing stakeholders. You can also request information that includes these ELEMENTS by asking relevant questions, such as:
+Finally, the **ASSETS** are the actual, tangible or non-tangible component in the organization that support (keeps alive) that abstract ELEMENT.
+
+> [!INFO]
+> Using the AI generated case, an identity-related **ELEMENT** could be _"real-time payment orchestration and embedded finance for e-commerce and marketplaces"_. The **FUNCTION** could be _"high-availability services"_. Finally, the supporting **ASSET** could be _"Application Programming Interfaces"_.
+
+Even though Red Hat approch is mostly used for internal CTI engagements, it can still be an effective framework when working with stakeholders, who know the details of the organization.
+
+Leveraging the inverviewing process, we can ask question to identify the ELEMENTS of the organization, such as:
 
 - What features define your organization?
 - What makes your organization unique?
@@ -136,28 +154,18 @@ Usually we find these keywords within internal documents or, in this scenario, b
 - What does your organization need to make revenue?
 - Where does your organization makes revenue?
 
-_Using the information provided by the stakeholder (AI generated), what could be the ELEMENTS of the organization? My answer is below this line_
-<!--
-- Features that define the org
-   - API-driven with microservices architecture
-   - Cloud-native organization
-   - Mid-size tech company with 6 years in the European market
+> [!TIP]
+> Use [Red Hat's PIR Process v1.1 Template](https://docs.google.com/spreadsheets/d/1lnZOGX6Shm4NoT06APeRPXe4jEX0dCWDXTrmm60aOa8/edit?usp=sharing) to document the ELEMENTS
 
-- Special attention to particular products/services
-   - GitHub for exposed API credentials
+_Using the information provided by the stakeholder, what could be the ELEMENTS of the organization? My answer is below this line_
 
-- How, what, and where does your organization makes revenue?
+> [!WARNING]
+> Don't get spoiler, my answer is below this line. Try it yourself first, then compare.
 
-The organization makes the most to the least revenue today in the EU, US, and LATAM regions (Where), by providing digital wallet services (How) to marketplaces, platforms, and neobanks. The organization uses a cloud-first API-driven approach, kubernetes and microservices environments to run their workloads (what) to all their customers with 99.99% uptime. 
+| Element | Function | Asset |
+|---|---|---|
+| Real-time payment orchestration and embedded finance for e-commerce and marketplaces | Availability of payment orchestration workflow to mantain business operations | Internal Cloud Resources - Transaction Pipelines |
+| Brand promise is “always-on payments” and we advertise six nines of availability to our biggest merchants. | Prestige of the brand to mantain customer trust through uninterrupted services | Internal Process - Monitoring and observability |
+| Use of third parties for fraud detection, KYC, and AML | Integrity and security of third party platforms to minimize breaches | Third Party Platforms - Fraud Detection |
+| Regulated business under EU and UK, with new ongoing LATAM expansion | Regulatory compliance and data handling | Requirements - Regulatory Compliance |
 
-- Important products or services
-   - Digital Wallet for partners launching in México and Brazil
-
-- Ahead of competitors
-   - High uptime rate (99.9999%)
-
-- Internal security strategy
-   - PCI-DSS compliant
-   - Internal, mostly reactive SOC
-   - Ocassional vulnerability scanning and red teamming operations
--->
