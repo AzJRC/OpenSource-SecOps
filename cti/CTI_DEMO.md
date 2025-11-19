@@ -238,38 +238,120 @@ _Using the information provided by the stakeholder (AI generated use case), the 
 | Cloud-native, moving workloads from on-premises to cloud instances | Workloads must remain up-and-running to ensure business continuity; protect migration tasks | - Systems and Technology: CI/CD - Systems and Technology: Cloud Resources - People: Cloud Engineers |
 | Highly dependent on third-party platforms and systems for fraud detection and anti-money laundering | Secure third-party software and platforms | - External Dependencies: Third-party services and solutions - Data: Contracts with partners and third-parties |
 
-
-
 #### Step 2: Map ELEMENTS to plausible ADVERSARY OPERATIONS
 
-The next step is to identify the most plausible adversarial threats to each ELEMENT of the organization. Red Hat's approach is simple:
+The next step is to identify the most plausible **ADVERSARY OPERATION** to each ELEMENT of the organization. Red Hat's approach is simple:
 
 1. For each ASSET that supports an ELEMENT's FUNCTION, identify the two most impactful **ADVERSARY OPERATION**.
 2. Assess each **ADVERSARY OPERATION** against the likelihood of occurence and the impact (this is essentially a **Risk Assesment** process)
 
-Now, a question rises. How do I know which **ADVERSARY OPERATION** is the most impactful over other possibilities?
+In the context of the Red Hat framework, **ADVERSARY OPERATIONS** are custom buckets that describe a particular way of threat actors to operate against your organization. According to Red Hat:
 
-The way to proceed is to ask yourself (or the stakeholders if they know), _how the ASSETS can fail so that the ELEMENTS function is affected?_ 
+> _We found that existing classifications of cyber attacks didn't quite fit our needs, leading us to develop our own classification. This classification focuses on the impact of cyber attacks on business operations and also on applicability of the terms used in the classification in threat intelligence platforms (TIPs), which is vital for operationalization._
 
-Here is the logic summarized:
+> [!NOTE]
+> If you are wondering how everything stick together, here is the logic summarized:
+> 1. An **ELEMENT** is tied to a **FUNCTION** that describes _what needs to be secured_ to keep the **ELEMENT** alive
+> 2. An **ELEMENT** depends on one or more **ASSETS** that supports the **ELEMENT**'s **FUNCTION**
+> 3. **ASSETS** can fail in one or more ways, affecting an **ELEMENT**'s FUNCTION
+> 4. **ADVERSARY OPERATION**(s) can force failures in **ASSETS**, negativelly affecting a **FUNCTION**, and therefore harming the **ELEMENT**
 
-1. An **ELEMENT** is tied to a **FUNCTION** that describes _what needs to be secured_ to keep the **ELEMENT** alive
-2. An **ELEMENT** depends on one or more **ASSETS** that supports the **ELEMENT**'s **FUNCTION**
-3. **ASSETS** can fail in one or more ways, affecting an **ELEMENT**'s FUNCTION
-4. **ADVERSARY OPERATION**(s) can force failures in **ASSETS**, negativelly affecting a **FUNCTION**, and therefore harming the **ELEMENT**
+Personally, I think this is another example of the flexibility of Red hat's framework for developing PIRs. It is not bad nor good; it is just a way of do it.
+
+Regardless of how you define your **ADVERSARY OPERATIONS**, you may be asking "How can I weight which is (are) the most impactful operation(s)? Keep in mind, again, that this is my way to do it. It works for me, and it may or not work for you.
+
+First, understand the **business context** (location and sector), and the **business needs** (short and long term goals). In this case, for the **FinTech** case study, we know the following details:
+
+> [!NOTE]
+> Don't worry about the weird numbers that look like IDs in some of my following responses. I will be explaining that later.
+
+> [!WARNING]
+> Don't get spoiler, my answer is below this line. Try it yourself first, then compare. 
+
+- **Sector**: 6.1.3.4 Payment processing industry (Financial Services)
+- **Regions of operation**: 6.2.4 Europe (Spain and Portugal), 6.2.6.5 United States, 6.2.3 Central America (México), and 6.2.8 South America (Brazil, Colombia, and Chile)
+- **Most important need**: Expansion to Latin America Market in the next 6 months to Mexico and Brazil, and Colombia and Chile in the next 18 months
+- **Important needs**: Brand promise; continuous delivery of highly-available financial services to trusted partners and clients, in EU, US, and LATAM
+
+Second, try to place yourself in the hat of a malicious threat actor. Ask yourself the question: _Write 2 or 3 reasons about why would you want to target FinTech Considering the context and goals of the organization._
+
+> [!WARNING]
+> Don't get spoiler, my answer is below this line. Try it yourself first, then compare. 
+
+- If I ever wanted to attack FinTech, a Financial organization (**Target industry**), I would do it for Financial Gain (**Motivation or intent**)
+- If I ever wanted to attack FinTech for non Financial Gain motivations, I will do it for Corporate Surveillance.
+
+> [!NOTE]
+> Intent is also subjetive. But a quick Google Search is useful to set a baseline. For instance, some examples of general intent cateogories are:
+> - Financial Gain
+> - Surveillance and Espionage
+> - Social Causes and Hacktivism
+> - Political Interest and Influence
+> - Personal Grievances and Disruption
+
+Third, ask yourself (or the stakeholders), _how the ASSETS can fail so that the ELEMENTS function is affected?_ 
 
 > [!TIP]
-> I think that a good way to proceed from here is to start writing drafts of the Intelligence Requirements
+> I think that a good way to proceed from here is to start writing drafts of the Intelligence Requirements. You can use the formula:
+> 
+> What **ADVERSARIAL OPERATIONS** can target `{ASSET}`, causing `{NEGATIVE EFFECT}` that affects `{BUSINESS GOAL}`
 
-- What **ADVERSARIAL OPERATIONS** can can target my systems and technology assets ultimately affecting the expansion to the Latino American market?
-- What **ADVERSARIAL OPERATIONS** can target my cloud resources affecting the continuous availability of the organization's extremly high-available payment orchestration and emdded financial services?
-- What **ADVERSARIAL OPERATIONS** can target our CI/CD pipeline that disrupts completely the migration of the remaining on-prem resources to the cloud?
-- What **ADVERSARIAL OPERATIONS** can target our cloud resources that ultimately halts operations required for the expansion into the LATAM market?
-- What **ADVERSARIAL OPERATIONS** can target our supply chain and third-party services, limitating our capabilities, and affecting our expansion into the LATAM market?
+> [!WARNING]
+> Don't get spoiler, my answer is below this line. Try it yourself first, then compare. 
+
+- What **ADVERSARIAL OPERATIONS** can target the real-time payment orchestration and embedded finance service crtiical service, causing operational disruption, which ultimately affects the expansion to the Latin America market?
+- What **ADVERSARIAL OPERATIONS** can target cloud resources of the organization, affecting the continuous delivery of the highly-available payment orchestration and emdded financial service, damaging our brand promise and partner trust?
+- What **ADVERSARIAL OPERATIONS** can target our CI/CD pipeline, which is critical for on-premise asset migrations to our cloud provider, partially halting or completely stopping the goal of expansion into the LATAM market?
+- What **ADVERSARIAL OPERATIONS** can target our supply chain and third-party services, limitating our capabilities and efficient service delivery, hurting or slowing our expansion into the Latin America market and damaging our brand image?
 
 > [!TIP]
 > Remember that you don’t need perfection. You just need 2 serious adversary operations per element that are:
 > - plausible for the sector and region,
 > - aligned with its function, and
 > - painful enough that the stakeholder would genuinely care.
+
+Finally, just answer the question. I personally like to review [Mitre ATT&CK matrix](https://attack.mitre.org/) and [Intel 471 Cyber Underground General Intelligence Requirements Handbook](https://intel471.com/resources/cyber-underground-handbook). Essentially, _for each Intelligence Requirement, which TTPs form a well-defined type of **ADVERSARIAL OPERATION** that aligns with the intent of a threat actor?_. Intel 471 General Intelligence Requirements 5 can be useful to find the relevant questions you need to answer to produce better results.
+
+> [!WARNING]
+> Don't get spoiler, my answer is below this line. Try it yourself first, then compare.
+
+- What **ADVERSARIAL OPERATIONS** can target the real-time payment orchestration and embedded finance service crtiical service, causing operational disruption, which ultimately affects the expansion to the Latin America market?
+   - **GIR 5**:
+      - 5.2.12.2 Denial of service (DoS) technique
+      - 5.5.7 Sabotage
+   - **Mitre ATT&CK**:
+      - T0814 Denial of Service
+      - T1485 Data Destruction
+      - T1529 System Shutdown/Reboot
+   - **Adversarial Operations**: 
+      - Ransomware and Sabotage
+      - Denial of Service and Availability
+- What **ADVERSARIAL OPERATIONS** can target cloud resources of the organization, affecting the continuous delivery of the highly-available payment orchestration and emdded financial service, damaging our brand promise and partner trust?
+   - **GIR 5**:
+      - Credential theft and abuse for access to cloud environments.
+      - Abuse of cloud management APIs to disrupt services.
+   - **Mitre ATT&CK**:
+      - Techniques related to valid accounts, cloud credential theft, and destructive operations against cloud resources.
+   - **Adversarial Operations**: 
+      - Account Compromise and Phishing
+      - Ransomware and Destructive Intrusion
+- What **ADVERSARIAL OPERATIONS** can target our CI/CD pipeline, which is critical for on-premise asset migrations to our cloud provider, partially halting or completely stopping the goal of expansion into the LATAM market?
+   - **GIR 5**:
+      - Compromise of software build pipelines and DevOps tooling.
+      - Abuse of developer or CI/CD credentials to deploy malicious code or infrastructure.
+   - **Mitre ATT&CK**:
+      - Techniques around build-system poisoning, trusted relationship abuse, and staged deployment of backdoored images or IaC.
+   - **Adversarial Operations**: 
+      - Supply-Chain Compromise.
+      - Ransomware and Sabotage
+- What **ADVERSARIAL OPERATIONS** can target our supply chain and third-party services, limitating our capabilities and efficient service delivery, hurting or slowing our expansion into the Latin America market and damaging our brand image?
+   - **GIR 5**:
+      - Compromise of third-party providers that integrate with payment platforms.
+      - Financial fraud operations that exploit weaknesses in fraud/AML decisioning.
+   - **Mitre ATT&CK**:
+      - Techniques abusing trusted relationships with external services.
+      - Techniques aimed at manipulating detection and response or bypassing anti-fraud mechanisms.
+   - **Adversarial Operations**: 
+      - Supply-Chain Compromise
+      - Account Compromise and Phishing
 
